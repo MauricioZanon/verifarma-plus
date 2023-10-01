@@ -1,29 +1,10 @@
-# verifarma-plus
+![verifarma-plus logo](/src/assets/logo.png)
 
-## Project setup
-```
-npm install
-```
+## Instalación
+Se deben instalar las dependencias corriendo el comando `npm install` en la raiz del proyecto.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Ejecución
+Para levantar el proyecto de manera local se debe ejecutar el comando `npm run serve` en la raiz, una vez finalizado se podrá acceder entrando a localhost:8080 y usando las siguientes credenciales:
+- username: verifarma
+- password: verifarma

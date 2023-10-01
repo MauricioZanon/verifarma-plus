@@ -1,5 +1,5 @@
 <template>
-	<router-link class="tarjeta-pelicula" :to="'/detalle/' + pelicula.Title">
+	<router-link :aria-label="pelicula.Title" class="tarjeta-pelicula" :to="'/detalle/' + pelicula.Title">
 		<img v-if="tienePoster()" class="poster" :src="pelicula.Poster" alt="">
 		<p v-else>{{ pelicula.Title }}</p>
 	</router-link>
@@ -24,17 +24,17 @@ export default defineComponent({
 
 <style scoped>
 .tarjeta-pelicula {
-    margin-top: 15px;
-    height: 300px;
-    width: 200px;
-    display: flex;
-    align-items: center;
+	margin-top: 15px;
+	height: 300px;
+	width: 200px;
+	display: flex;
+	align-items: center;
 	cursor:pointer;
 }
 
 .poster {
-    max-height: 300px;
-    max-width: 200px;
-    border-radius: 12px;
+	max-height: 300px;
+	max-width: 200px;
+	border-radius: 12px;
 }
 </style>

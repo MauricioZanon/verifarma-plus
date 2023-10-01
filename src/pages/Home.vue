@@ -1,21 +1,31 @@
 <template>
-	<input class="buscador" type="text" role="search" @change="buscarPelicula">
-	<div class="contenedor-tarjetas">
-		<div v-for="pelicula in peliculas" :key="pelicula.imdbID">
-			<TarjetaPelicula :pelicula="pelicula"></TarjetaPelicula>
+	<form class="form-floating mb-3" @submit.prevent="submitBusqueda">
+		<input class="buscador form-control" id="busqueda-input" type="text" role="search" placeholder="Search" ref="inputBusqueda">
+		<label class="input-label" for="busqueda-input">Search</label>
+	</form>
+	<section v-if="peliculas.length">
+		<h2 v-if="ultimaBusqueda">Results for "{{ ultimaBusqueda }}".</h2>
+		<div class="contenedor-tarjetas">
+			<TarjetaPelicula v-for="pelicula in peliculas" :key="pelicula.imdbID" :pelicula="pelicula" />
 		</div>
+	</section>
+	<div v-else class="alert alert-warning" role="alert">
+		Nothing was found for "{{ ultimaBusqueda }}".
 	</div>
+	<Paginado @cambiarPagina="cambiarPagina" :cantidad-peliculas="cantidadTotal"/>
 </template>
 
 <script lang="ts">
-import { buscarMasivo } from '../service/PeliculaService';
-import { Pelicula } from '../types';
+import { defineComponent } from 'vue';
 import TarjetaPelicula from '../components/TarjetaPelicula.vue';
-import { Ref, defineComponent, ref } from 'vue';
+import { buscarMasivo } from '../service/PeliculaService';
+import { PeliculaBasica } from '../types';
+import Paginado from "../components/Paginado.vue";
 
 type HomeData = {
-	peliculas: Array<Pelicula>,
-	modal: Ref<boolean>
+	peliculas: Array<PeliculaBasica>,
+	cantidadTotal: number;
+	ultimaBusqueda: string;
 }
 
 export default defineComponent({
@@ -23,34 +33,45 @@ export default defineComponent({
 	data(): HomeData {
 		return {
 			peliculas: [],
-			modal: ref(false),
+			cantidadTotal: 0,
+			
+			ultimaBusqueda: "Harry Potter",
 		};
 	},
-	async mounted() {
-		this.peliculas = await buscarMasivo("harry potter");
+	mounted() {
+		this.buscar(this.ultimaBusqueda);
 	},
 	methods: {
-		async buscarPelicula(evento: Event): Promise<void> {
-			const titulo = (evento.target as HTMLInputElement).value;
-			this.peliculas = await buscarMasivo(titulo);
-			console.log(this.peliculas);
+		async submitBusqueda(): Promise<void> {
+			const busqueda = (this.$refs.inputBusqueda as HTMLInputElement).value;
+			await this.buscar(busqueda);
+			this.ultimaBusqueda = busqueda;
+		},
+		async buscar(titulo: string, pagina?: number): Promise<void> {
+			const resultadoBusqueda = await buscarMasivo(titulo, pagina);
+			this.peliculas = resultadoBusqueda.peliculas;
+			this.cantidadTotal = Number(resultadoBusqueda.cantidadTotal);
+		},
+		cambiarPagina(pagina: number): void {
+			this.buscar(this.ultimaBusqueda, pagina);
 		},
 	},
-	components: { TarjetaPelicula },
+	components: { TarjetaPelicula, Paginado },
 });
 </script>
 
 <style scoped>
-
 .buscador {
 	margin: 8px auto;
-    display: block;
+	display: block;
 }
 
 .contenedor-tarjetas {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-around;
+	width: 90%;
+	margin: auto;
 }
 
 </style>

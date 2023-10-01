@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import DetallePelicula from "../components/DetallePelicula.vue";
+import VistaDetalle from "../pages/VistaDetalle.vue";
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -12,7 +12,7 @@ const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: "/detalle/:tituloPelicula",
-		component: DetallePelicula,
+		component: VistaDetalle,
 	},
 ];
 
